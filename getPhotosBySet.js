@@ -1,4 +1,5 @@
 // get FLickr Photos By Set
+//Edited by IDBan
 var flickr = {};
 
 flickr.getPhotosBySet = (function($) {
