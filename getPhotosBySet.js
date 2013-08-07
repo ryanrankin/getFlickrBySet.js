@@ -1,12 +1,13 @@
 // get FLickr Photos By Set
-//Edited by IDBan
+
 var flickr = {};
 
 flickr.getPhotosBySet = (function($) {
-    this.apiKey = '';
-    this.userId = '',
-    this.pSetId = '';
-    this.targetDiv = '';
+    var loadButtons = $('a.load-button'),
+        apiKey = '',
+        userId = '',
+        setId = '',
+        targetDiv = '';
 
     function checkCredentials(){
         if(apiKey === ''){
@@ -29,6 +30,7 @@ flickr.getPhotosBySet = (function($) {
 
     function getPrivatePhotos(id) {
         var photoset_id = id;
+        $(targetDiv).html('<h1>Flickr Set: '+id+'</h1>');
 
         $.getJSON('http://api.flickr.com/services/rest/?format=json&method=flickr.photosets.getPhotos&photoset_id=' + photoset_id + '&per_page=100' + '&page=1' + '&api_key=' + apiKey + '&user_id=' + userId + '&jsoncallback=?', function(data) {
             $.each(data.photoset.photo, function(i, flickrPhoto) {
@@ -36,24 +38,30 @@ flickr.getPhotosBySet = (function($) {
                 var a_href = "http://www.flickr.com/photos/" + data.photoset.owner + "/" + flickrPhoto.id + "/";
                 $("<img/>").attr("src", basePhotoURL).appendTo(targetDiv).wrap(("<div class='item photo'></div>"))
             });
+            window.scrollTo(0, 720);
+            $(targetDiv).append('<p id="backToTop"><a href="#top">Back to top <span>&uarr;</span></a></p>');
+        });
+    }
+    function clickHandler(){
+        loadButtons.on('click', function(e){
+            e.preventDefault();
+            // get set from target's id
+            setId  = $(this).attr('id');
+            getPrivatePhotos(setId);
+            return false;
         });
     }
 
     return {
-        getPhotos: function(id) {
-            if(checkCredentials()){
-                if(id){
-                    getPrivatePhotos(id);
-                } else {
-                    getPrivatePhotos(pSetId);
-                }
-            }
+        bindUIEvents:function(){
+            clickHandler();
         },
-        init: function(a, u, s, d) {
-            apiKey = q,
-            userId = u,
-            pSetId = s;
-            targetDiv = d;
+        init: function(credentials) {
+            apiKey = credentials.apiKey,
+            userId = credentials.userId,
+            setId = credentials.setId;
+            targetDiv = credentials.targetDiv;
+            this.bindUIEvents();
         }
     };
-})(jQuery).init('apiKey-goes-here', 'userId-goes-here', 'PhotoSetId-goes-here', 'target-Div-goes-here');
+})(jQuery);

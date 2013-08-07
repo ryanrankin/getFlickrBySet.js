@@ -1,0 +1,20 @@
+<html>
+<body>
+    <a href="http://www.flickr.com/" class="load-button" id="flickr-set-id-goes-here">Load Photos</a>
+    <div id="photos">&nbsp;</div>
+</body>
+<script type="text/javascript" src="http://codeorigin.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="getPhotosBySet.js"></script>
+<script type="text/javascript">
+ // initialize plugin
+ $(function(){
+    var credentials = {
+        'apiKey':'flickr api key goes here',
+        'userId':'flickr user id goes here',
+        'setId':'flickr set id goes here',
+        'targetDiv':'#photos'
+    };
+    flickr.getPhotosBySet.init(credentials);
+ });
+</script>
+</html>
